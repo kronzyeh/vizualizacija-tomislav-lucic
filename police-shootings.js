@@ -16,7 +16,6 @@
     .attr("class", "tooltip")
     .style("opacity", 0);
 
-  // Define the zoom behavior
   var zoom = d3.behavior.zoom()
     .scaleExtent([1, 8])
     .on("zoom", zoomed);
@@ -64,7 +63,7 @@
         var coords = projection([d.longitude, d.latitude]);
         return coords[1];
       })
-      .attr("r", 5) // Fixed radius for better visibility
+      .attr("r", 5) 
       .style("fill", "red")
       .style("opacity", 0.3)
       .style("stroke", "white")

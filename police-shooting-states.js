@@ -36,7 +36,9 @@
       }
     }
 
-    var colorRange = ["red", "orange", "yellow", "green", "blue", "indigo"];
+    colorDomain.push("All");
+
+    var colorRange = ["red", "orange", "yellow", "green", "blue", "indigo", "lightgray"];
     var color = d3.scale.threshold()
       .domain(colorDomain)
       .range(colorRange);
@@ -85,6 +87,31 @@
         .attr("height", 18)
         .style("fill", function (d, i) {
           return color.range()[i];
+        })
+        .on("click", function (d, i) {
+          var clickedColor = colorDomain[i];
+          svg.selectAll("path")
+            .style("fill", function (d) {
+              var stateName = d.properties.name;
+              var cases = stateCounts[stateName] || 0;
+              if (cases > 500 && clickedColor == 600) {
+                return color(550);
+              }
+              else if (clickedColor === 'All') {
+                if (cases > 500){
+                  return color(550);
+                }
+                else {
+                  return color(cases);
+                }
+              }
+              else {
+                return cases < clickedColor && cases > clickedColor - 100 ? color(cases) : "gray";
+              }
+            });
+        })
+        .on("mouseover", function () {
+          d3.select(this).style("cursor", "pointer");
         });
 
       legend.append("text")
@@ -95,10 +122,13 @@
         .text(function (d, i) {
           if (i === 0) {
             return "0 - " + colorDomain[i];
-          } else if (i === color.range().length - 1) {
+          } else if (i === color.range().length - 2) {
             return colorDomain[color.range().length - 2] + "+";
-          } else {
+          } else if (colorDomain[i - 1] != 600){
             return colorDomain[i - 1] + " - " + colorDomain[i];
+          }
+          else{
+            return "All";
           }
         });
     });
