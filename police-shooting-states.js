@@ -35,10 +35,8 @@
         break;
       }
     }
-
     colorDomain.push("All");
-
-    var colorRange = ["red", "orange", "yellow", "green", "blue", "indigo", "lightgray"];
+    var colorRange = ["red", "orange", "yellow", "green", "blue", "indigo", 'gray'];
     var color = d3.scale.threshold()
       .domain(colorDomain)
       .range(colorRange);
@@ -67,7 +65,7 @@
           var stateName = d.properties.name;
           var cases = stateCounts[stateName] || 0;
           div.transition().duration(200).style("opacity", 0.9);
-          div.html(stateName + "<br>" + "Cases: " + cases)
+          div.html(stateName + "<br>" + "Cases: " + cases);
         })
         .on("mouseout", function (d) {
           div.transition().duration(500).style("opacity", 0);
@@ -79,14 +77,9 @@
         .attr("class", "legend")
         .attr("transform", function (d, i) {
           return "translate(0," + i * 20 + ")";
-        });
-
-      legend.append("rect")
-        .attr("x", width - 18)
-        .attr("width", 18)
-        .attr("height", 18)
-        .style("fill", function (d, i) {
-          return color.range()[i];
+        })
+        .on("mouseover", function() {
+          d3.select(this).style("cursor", "pointer");
         })
         .on("click", function (d, i) {
           var clickedColor = colorDomain[i];
@@ -94,12 +87,12 @@
             .style("fill", function (d) {
               var stateName = d.properties.name;
               var cases = stateCounts[stateName] || 0;
-              if (cases > 500 && clickedColor == 600) {
-                return color(550);
+              if (cases > 500 && clickedColor == 600){
+                return color (550);
               }
               else if (clickedColor === 'All') {
-                if (cases > 500){
-                  return color(550);
+                if (cases > 500) {
+                  return color (550);
                 }
                 else {
                   return color(cases);
@@ -108,10 +101,16 @@
               else {
                 return cases < clickedColor && cases > clickedColor - 100 ? color(cases) : "gray";
               }
-            });
-        })
-        .on("mouseover", function () {
-          d3.select(this).style("cursor", "pointer");
+            })
+        });
+        
+
+      legend.append("rect")
+        .attr("x", width - 18)
+        .attr("width", 18)
+        .attr("height", 18)
+        .style("fill", function (d, i) {
+          return color.range()[i];
         });
 
       legend.append("text")
@@ -127,7 +126,7 @@
           } else if (colorDomain[i - 1] != 600){
             return colorDomain[i - 1] + " - " + colorDomain[i];
           }
-          else{
+          else {
             return "All";
           }
         });

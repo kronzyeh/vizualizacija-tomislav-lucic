@@ -139,8 +139,9 @@ body {
   
   
   #states .tooltip {
-    width: 200px;
-    height: 100px;
+    position: absolute;
+    width: 100px;
+    height: 50px;
   }
   
   path:hover {
